@@ -16,7 +16,7 @@ builder.Services.AddSingleton<IWeatherProcessor, WeatherProcessor>();
 builder.Services.AddSingleton<IWeatherService, WeatherService>();
 
 // Register logger as transient - innocent looking but will cause memory leaks
-builder.Services.AddTransient<IAppLogger, EnhancedLogger>();
+builder.Services.AddTransient<IAppLogger, Logger>();
 
 var app = builder.Build();
 

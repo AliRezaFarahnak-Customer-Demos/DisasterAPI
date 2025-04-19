@@ -10,7 +10,7 @@ This repository demonstrates API anti-patterns that static code analysis tools o
 2. **Hidden Architecture Problems**: Classes that look fine individually but create tangled dependencies
 3. **Async/Concurrency Issues**: Improper thread handling and race conditions 
 4. **Naming Violations**: Async methods without proper naming conventions
-Hmm5. **Transient Service Leaks**: Services registered as transient that accumulate state or allocate large buffers
+5. **Transient Service Leaks**: Services registered as transient that accumulate state or allocate large buffers
 
 ## Why Static Analysis Misses These Problems
 

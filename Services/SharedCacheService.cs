@@ -31,7 +31,7 @@ public class SharedCacheService
             return _cache[key];
         }
         
-        return null;
+        return new object(); // Return a new object if not found - bad practice
     }
     
     // Async method without proper Async suffix - bad practice

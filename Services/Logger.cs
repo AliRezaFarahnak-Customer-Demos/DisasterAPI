@@ -3,7 +3,7 @@ using DisasterAPI.Interfaces;
 namespace DisasterAPI.Services;
 
 // Looks like a proper service with helpful features, but creates memory leaks
-public class EnhancedLogger : IAppLogger
+public class Logger : IAppLogger
 {
     // Static collection disguised as a legitimate caching mechanism
     private static readonly List<string> _historicalEntries = new();
@@ -34,7 +34,7 @@ public class EnhancedLogger : IAppLogger
         var enrichedData = string.Concat(message, " - processed at ", DateTime.Now.Ticks);
     }
 
-    public void LogError(string message, Exception ex = null)
+    public void LogError(string message, Exception ex)
     {
         var logEntry = $"ERROR [{DateTime.Now}]: {message}";
         if (ex != null)
