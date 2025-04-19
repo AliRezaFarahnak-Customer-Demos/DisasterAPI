@@ -1,3 +1,5 @@
+using DisasterAPI.Interfaces;
+using DisasterAPI.Services;
 using DisasterAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<DisasterAPI.Services.WeatherService>();
+
+// Register all services in the DI container
+builder.Services.AddSingleton<IWeatherDataProvider, WeatherDataProvider>();
+builder.Services.AddSingleton<SharedCacheService>();
+builder.Services.AddSingleton<IWeatherProcessor, WeatherProcessor>();
+builder.Services.AddSingleton<IWeatherService, WeatherService>();
+
+// Register logger as transient - innocent looking but will cause memory leaks
+builder.Services.AddTransient<IAppLogger, EnhancedLogger>();
 
 var app = builder.Build();
 
