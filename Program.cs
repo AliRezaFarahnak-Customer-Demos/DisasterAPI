@@ -1,8 +1,11 @@
+using DisasterAPI.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<DisasterAPI.Services.WeatherService>();
 
 var app = builder.Build();
 
@@ -14,28 +17,29 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/weatherforecast", (DisasterAPI.Services.WeatherService weatherService) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    try
+    {
+        // This calls the service method that already has its own try-catch
+        var forecast = weatherService.GetForecasts();
+        
+        // Additional artificial complexity that could lead to problems
+        if (forecast == null)
+        {
+            throw new ArgumentNullException(nameof(forecast));
+        }
+        
+        return forecast;
+    }
+    catch (Exception ex)
+    {
+        // Bad practice: Another layer of general exception handling
+        // This creates a nested try-catch scenario as the service already has try-catch
+        Console.WriteLine($"API endpoint error: {ex.Message}");
+        return Enumerable.Empty<WeatherForecast>();
+    }
 })
 .WithName("GetWeatherForecast");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
